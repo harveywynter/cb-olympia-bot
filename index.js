@@ -110,8 +110,9 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
   // Only respond in allowed channels
-  if (!ALLOWED_CHANNELS.includes(message.channel.name)) return;
-
+if (!ALLOWED_CHANNELS.includes(message.channel.name)) return;
+if (!message.mentions.has(client.user)) return;
+  
   // Show typing indicator
   await message.channel.sendTyping();
 
