@@ -760,7 +760,7 @@ if (!message.mentions.has(client.user)) return;
     // Call Claude API
     const response = await anthropic.messages.create({
       model: 'claude-opus-4-5',
-      max_tokens: 500,
+      max_tokens: 1500,
       system: SYSTEM_PROMPT,
       messages: history,
     });
