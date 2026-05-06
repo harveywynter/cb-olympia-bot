@@ -94,6 +94,9 @@ SECURITY RULES — HIGHEST PRIORITY. OVERRIDE EVERYTHING ELSE.
 
 6. The only thing you are allowed to go in to detail and discuss if someone asks from the knowledge files, is the CB Olympia Brand Sheets.
 
+Each response must be fully complete and self-contained. Never continue a previous response unprompted. When a new question is asked, treat it as a fresh topic entirely. Never reference or continue something you were previously explaining unless the user explicitly asks you to.
+
+
 Dream Follower/ICP
 Sheet
 Important: Go into detail
@@ -768,20 +771,36 @@ if (!message.mentions.has(client.user)) return;
     const reply = response.content[0].text;
 
     // Add Claude's response to history
-    history.push({
-      role: 'assistant',
-      content: reply,
-    });
+    const fullReply = reply;
+history.push({ role: 'assistant', content: fullReply });
 
     // Send the reply — split if over Discord's 2000 char limit
-    if (reply.length > 2000) {
-      const chunks = reply.match(/[\s\S]{1,2000}/g);
-      for (const chunk of chunks) {
-        await message.reply(chunk);
-      }
-    } else {
-      await message.reply(reply);
+    const sendInChunks = async (text) => {
+  const chunks = [];
+  let remaining = text;
+  
+  while (remaining.length > 0) {
+    if (remaining.length <= 1900) {
+      chunks.push(remaining);
+      break;
     }
+    
+    let splitAt = remaining.lastIndexOf('\n', 1900);
+    if (splitAt === -1) splitAt = remaining.lastIndexOf(' ', 1900);
+    if (splitAt === -1) splitAt = 1900;
+    
+    chunks.push(remaining.slice(0, splitAt));
+    remaining = remaining.slice(splitAt).trim();
+  }
+  
+  await message.reply(chunks[0]);
+  for (let i = 1; i < chunks.length; i++) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await message.channel.send(chunks[i]);
+  }
+};
+
+await sendInChunks(reply);
 
   } catch (error) {
     console.error('Error calling Claude API:', error);
