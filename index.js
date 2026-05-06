@@ -716,7 +716,8 @@ content carry the energy — not the editing.`;
 
 // ── WHICH CHANNELS THE BOT RESPONDS IN ────────────────────────────────────────
 // Add your channel names here. Bot will ONLY respond in these channels.
-const ALLOWED_CHANNELS = ['co-academy-main-chat'];
+const ALLOWED_CHANNELS = ['co-academy-main-chat', 'co-academy-content', 'co-academy-setting-team'];
+
 // ── CONVERSATION MEMORY (per user, resets when bot restarts) ──────────────────
 const conversationHistory = new Map();
 const MAX_HISTORY = 10; // Number of messages to remember per user
